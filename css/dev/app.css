@@ -290,12 +290,20 @@
     position: absolute;
   }
 
+  .container {
+    width: 100%;
+  }
+
   .mb-3 {
     margin-bottom: calc(var(--spacing) * 3);
   }
 
   .mb-4 {
     margin-bottom: calc(var(--spacing) * 4);
+  }
+
+  .mb-5 {
+    margin-bottom: calc(var(--spacing) * 5);
   }
 
   .block {
@@ -340,6 +348,11 @@
 
   .text-center {
     text-align: center;
+  }
+
+  .blur {
+    --tw-blur: blur(0.5rem);
+    filter: var(--tw-blur, ) var(--tw-brightness, ) var(--tw-contrast, ) var(--tw-grayscale, ) var(--tw-hue-rotate, ) var(--tw-invert, ) var(--tw-saturate, ) var(--tw-sepia, ) var(--tw-drop-shadow, );
   }
 
   .filter {
@@ -640,6 +653,9 @@ body {
   max-width: 64rem;
   margin: 0 auto;
 }
+.bg-gray {
+  background-color: #fafafa;
+}
 .full-iframe-container {
   position: relative;
   width: 100vw;
@@ -654,9 +670,62 @@ body {
   height: 100%;
   border: none;
 }
+.section-game-video h4 {
+  text-align: center;
+}
+.section-game-video__image {
+  max-width: 50rem;
+  margin: 0 auto;
+  position: relative;
+  cursor: pointer;
+}
+.section-game-video__image::before {
+  content: "";
+  display: block;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  position: absolute;
+  box-shadow: 0 0.125rem 0.3125rem #000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff url("data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='iso-8859-1'?%3e%3c!--%20Uploaded%20to:%20SVG%20Repo,%20www.svgrepo.com,%20Generator:%20SVG%20Repo%20Mixer%20Tools%20--%3e%3csvg%20fill='%23000000'%20height='50rem'%20width='50rem'%20version='1.1'%20id='Capa_1'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20viewBox='0%200%20191.255%20191.255'%20xml:space='preserve'%3e%3cpath%20d='M162.929,66.612c-2.814-1.754-6.514-0.896-8.267,1.917s-0.895,6.513,1.917,8.266c6.544,4.081,10.45,11.121,10.45,18.833%20s-3.906,14.752-10.45,18.833l-98.417,61.365c-6.943,4.329-15.359,4.542-22.512,0.573c-7.154-3.97-11.425-11.225-11.425-19.406%20V34.262c0-8.181,4.271-15.436,11.425-19.406c7.153-3.969,15.569-3.756,22.512,0.573l57.292,35.723%20c2.813,1.752,6.513,0.895,8.267-1.917c1.753-2.812,0.895-6.513-1.917-8.266L64.512,5.247c-10.696-6.669-23.661-7-34.685-0.883%20C18.806,10.48,12.226,21.657,12.226,34.262v122.73c0,12.605,6.58,23.782,17.602,29.898c5.25,2.913,10.939,4.364,16.616,4.364%20c6.241,0,12.467-1.754,18.068-5.247l98.417-61.365c10.082-6.287,16.101-17.133,16.101-29.015S173.011,72.899,162.929,66.612z'/%3e%3c/svg%3e") 0.875rem 0.75rem/2rem 2rem no-repeat;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+}
+.section-game-video__image img {
+  max-width: 100%;
+  width: 100%;
+}
+@media (min-width: 40rem) {
+    .container {
+      max-width: 40rem;
+    }
+}
+@media (min-width: 48rem) {
+    .container {
+      max-width: 48rem;
+    }
+}
 @media (min-width: 64rem) {
+    .container {
+      max-width: 64rem;
+    }
     .lg\:mb-6 {
       margin-bottom: calc(var(--spacing) * 6);
+    }
+}
+@media (min-width: 80rem) {
+    .container {
+      max-width: 80rem;
+    }
+}
+@media (min-width: 96rem) {
+    .container {
+      max-width: 96rem;
     }
 }
 @media (max-width: 83em) {
@@ -785,6 +854,9 @@ body {
   .page--game {
     padding-top: 5rem;
   }
+  .page--game-2 {
+    padding-top: 5rem;
+  }
 }
 @media (min-width: 83em) {
   .display-1 {
@@ -804,6 +876,12 @@ body {
   }
   .page--inside {
     padding-bottom: 3.75rem;
+  }
+  .py {
+    padding-top: 5rem;
+  }
+  .py {
+    padding-bottom: 5rem;
   }
   .full-iframe-container {
     margin-top: 3.75rem;
@@ -828,6 +906,12 @@ body {
   .page--inside {
     padding-bottom: clamp( 1.875rem , 1.2797619047625rem  +  2.9761904762vw , 3.75rem );
   }
+  .py {
+    padding-top: clamp( 2.5rem , 1.70634920635rem  +  3.9682539683vw , 5rem );
+  }
+  .py {
+    padding-bottom: clamp( 2.5rem , 1.70634920635rem  +  3.9682539683vw , 5rem );
+  }
   .full-iframe-container {
     margin-top: clamp( 1.875rem , 1.2797619047625rem  +  2.9761904762vw , 3.75rem );
   }
@@ -850,6 +934,12 @@ body {
   }
   .page--inside {
     padding-bottom: 1.875rem;
+  }
+  .py {
+    padding-top: 2.5rem;
+  }
+  .py {
+    padding-bottom: 2.5rem;
   }
   .full-iframe-container {
     margin-top: 1.875rem;
@@ -884,6 +974,9 @@ body {
   }
   .page--game {
     padding-top: 10rem;
+  }
+  .page--game-2 {
+    padding-top: 7rem;
   }
 }
 @media (min-width: 61.99875em) {

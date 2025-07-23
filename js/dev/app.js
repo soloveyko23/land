@@ -243,6 +243,7 @@ document.querySelector("[data-header-scroll]") ? window.addEventListener("load",
 class UniversalFormValidator {
   constructor(popupSelector = ".popup") {
     this.popup = document.querySelector(popupSelector);
+    this.videoPopup = document.querySelector("#popupVideo");
     this.forms = document.querySelectorAll("form");
     if (!this.popup) {
       console.error(`Popup with selector "${popupSelector}" not found`);
@@ -252,7 +253,9 @@ class UniversalFormValidator {
   }
   init() {
     this.setupPopup();
+    this.setupVideoPopup();
     this.bindFormsEvents();
+    this.bindModalEvents();
   }
   setupPopup() {
     this.popup.setAttribute("aria-hidden", "true");
@@ -260,9 +263,93 @@ class UniversalFormValidator {
     this.popup.setAttribute("aria-modal", "true");
     this.bindPopupEvents();
   }
+  setupVideoPopup() {
+    if (!this.videoPopup) {
+      console.warn("Video popup #popupVideo not found");
+      return;
+    }
+    this.videoPopup.setAttribute("aria-hidden", "true");
+    this.videoPopup.setAttribute("role", "dialog");
+    this.videoPopup.setAttribute("aria-modal", "true");
+    this.bindVideoPopupEvents();
+  }
   bindFormsEvents() {
     this.forms.forEach((form) => {
       form.addEventListener("submit", (e) => this.handleFormSubmit(e, form));
+    });
+  }
+  bindModalEvents() {
+    document.addEventListener("click", (e) => {
+      const modalTrigger = e.target.closest("[data-modal]");
+      if (modalTrigger) {
+        e.preventDefault();
+        this.handleModalClick(modalTrigger);
+      }
+    });
+  }
+  handleModalClick(trigger) {
+    const modalSelector = trigger.dataset.modal;
+    const videoId = trigger.dataset.modalIdYt;
+    if (modalSelector === "#popupVideo" && videoId) {
+      this.openVideoPopup(videoId);
+    }
+  }
+  openVideoPopup(videoId) {
+    if (!this.videoPopup) return;
+    const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+    let videoContainer = this.videoPopup.querySelector(".video-container");
+    if (!videoContainer) {
+      videoContainer = document.createElement("div");
+      videoContainer.className = "video-container";
+      let popupContent = this.videoPopup.querySelector(".popup__content");
+      if (!popupContent) {
+        popupContent = document.createElement("div");
+        popupContent.className = "popup__content";
+        this.videoPopup.appendChild(popupContent);
+      }
+      popupContent.appendChild(videoContainer);
+    }
+    const iframe = document.createElement("iframe");
+    iframe.src = embedUrl;
+    iframe.width = "100%";
+    iframe.height = "100%";
+    iframe.frameBorder = "0";
+    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+    iframe.allowFullscreen = true;
+    iframe.title = "YouTube video player";
+    videoContainer.innerHTML = "";
+    videoContainer.appendChild(iframe);
+    this.showVideoPopup();
+  }
+  showVideoPopup() {
+    if (!this.videoPopup) return;
+    document.documentElement.classList.add("popup-show");
+    this.videoPopup.classList.add("popup_show");
+    this.videoPopup.setAttribute("aria-hidden", "false");
+    this.focusFirstElementInPopup(this.videoPopup);
+    document.body.style.overflow = "hidden";
+  }
+  closeVideoPopup() {
+    if (!this.videoPopup) return;
+    this.videoPopup.classList.remove("popup_show");
+    document.documentElement.classList.remove("popup-show");
+    this.videoPopup.setAttribute("aria-hidden", "true");
+    const videoContainer = this.videoPopup.querySelector(".video-container");
+    if (videoContainer) {
+      videoContainer.innerHTML = "";
+    }
+    document.body.style.overflow = "";
+  }
+  bindVideoPopupEvents() {
+    if (!this.videoPopup) return;
+    const closeBtn = this.videoPopup.querySelector("[data-popup-close]");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", () => this.closeVideoPopup());
+    }
+    this.videoPopup.addEventListener("click", (e) => {
+      if (e.target === this.videoPopup) {
+        this.closeVideoPopup();
+      }
     });
   }
   bindPopupEvents() {
@@ -276,8 +363,12 @@ class UniversalFormValidator {
       }
     });
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && this.isPopupOpen()) {
-        this.closePopup();
+      if (e.key === "Escape") {
+        if (this.isVideoPopupOpen()) {
+          this.closeVideoPopup();
+        } else if (this.isPopupOpen()) {
+          this.closePopup();
+        }
       }
     });
   }
@@ -333,7 +424,7 @@ class UniversalFormValidator {
     document.documentElement.classList.add("popup-show");
     this.popup.classList.add("popup_show");
     this.popup.setAttribute("aria-hidden", "false");
-    this.focusFirstElement();
+    this.focusFirstElementInPopup(this.popup);
     document.body.style.overflow = "hidden";
   }
   closePopup() {
@@ -345,13 +436,22 @@ class UniversalFormValidator {
   isPopupOpen() {
     return this.popup.classList.contains("popup_show");
   }
-  focusFirstElement() {
-    const focusableElements = this.popup.querySelectorAll(
+  isVideoPopupOpen() {
+    return this.videoPopup && this.videoPopup.classList.contains("popup_show");
+  }
+  focusFirstElementInPopup(popup) {
+    const focusableElements = popup.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
     if (focusableElements.length > 0) {
       focusableElements[0].focus();
     }
+  }
+  // Utility method to extract YouTube video ID from various URL formats
+  extractYouTubeId(url) {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return match && match[2].length === 11 ? match[2] : null;
   }
 }
 document.addEventListener("DOMContentLoaded", function() {
